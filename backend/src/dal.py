@@ -63,7 +63,7 @@ class ToDoDAL:
 
         async def create_todo_list(self, name: str, session=None) -> str:
             response = await self._todo_collection.insert_one(
-                {"name": name, "items": {}},
+                {"name": name, "items": []},
                 session = session,
             )
             return str(response.inserted_id)
@@ -78,7 +78,7 @@ class ToDoDAL:
         async def delete_todo_list(self, id: str | ObjectId, session=None) -> bool:
             response = await self._todo_collection.delete_one(
                 {"_id": ObjectId(id)},
-                session - session
+                session = session
             )
             return response.deleted_count == 1
         
@@ -125,7 +125,7 @@ class ToDoDAL:
                 self,
                 doc_id: str | ObjectId,
                 item_id: str,
-                session: None
+                session=None
         ) -> ToDoList | None:
             result = await self._todo_collection.find_one_and_update(
                 {"_id": ObjectId(doc_id)},
